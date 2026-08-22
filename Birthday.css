@@ -1,0 +1,333 @@
+:root{
+    --plum-deep: #2b0f1f;
+    --plum-mid: #4a1a34;
+    --rose: #e2617f;
+    --rose-glow: #ff8fa3;
+    --gold: #d9a441;
+    --cream: #f6ead9;
+}
+
+*{
+    box-sizing: border-box;
+}
+
+html, body{
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 50% 65%, var(--plum-mid) 0%, var(--plum-deep) 60%, #180810 100%);
+    font-family: "Pacifico", cursive;
+}
+
+.stage{
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+.ambient{
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 30% 20%, rgba(217, 164, 65, 0.08), transparent 40%),
+        radial-gradient(circle at 75% 80%, rgba(226, 97, 127, 0.10), transparent 45%);
+    pointer-events: none;
+}
+
+.caption{
+    position: absolute;
+    bottom: 6%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--gold);
+    letter-spacing: 0.35em;
+    font-size: 12px;
+    text-transform: uppercase;
+    opacity: 0.5;
+    z-index: 10;
+    pointer-events: none;
+}
+
+/* each floating heart/flower wrapper — positions it and drives rise+sway */
+.bloom{
+    position: absolute;
+    bottom: -40px;
+    will-change: transform, opacity, bottom;
+    pointer-events: none;
+}
+
+/* inner element drives the heartbeat/pulse scale, kept separate so it
+   doesn't fight the rise/sway animation on the wrapper */
+.pulse{
+    display: block;
+    animation-name: pulse-scale;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    transform-origin: center;
+}
+
+@keyframes pulse-scale{
+    0%   { transform: scale(1); }
+    18%  { transform: scale(1.3); }
+    36%  { transform: scale(1); }
+    54%  { transform: scale(1.18); }
+    100% { transform: scale(1); }
+}
+
+@keyframes rise{
+    from { bottom: -40px; opacity: 0; }
+    8%   { opacity: var(--maxop, 0.9); }
+    92%  { opacity: var(--maxop, 0.9); }
+    to   { bottom: 110vh; opacity: 0; }
+}
+
+@keyframes sway{
+    0%, 100% { margin-left: -14px; }
+    50%      { margin-left: 14px; }
+}
+
+/* ============ ENVELOPE ============ */
+
+.envelope-scene{
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    perspective: 900px;
+}
+
+.envelope-wrap{
+    position: relative;
+    width: 220px;
+    height: 150px;
+    cursor: pointer;
+}
+
+.envelope-wrap.shake{
+    animation: envelope-shake 0.45s ease;
+}
+
+@keyframes envelope-shake{
+    0%, 100% { transform: translateX(0) rotate(0deg); }
+    15%      { transform: translateX(-8px) rotate(-4deg); }
+    30%      { transform: translateX(7px) rotate(4deg); }
+    45%      { transform: translateX(-6px) rotate(-3deg); }
+    60%      { transform: translateX(5px) rotate(3deg); }
+    75%      { transform: translateX(-3px) rotate(-1deg); }
+}
+
+/* the envelope picture itself */
+.envelope-image{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 18px 40px rgba(0,0,0,0.45));
+    transition: transform 0.6s cubic-bezier(.3,.9,.3,1), opacity 0.6s ease;
+}
+
+/* pop + fade away when the envelope opens, making room for the card overlay */
+.envelope-wrap.open .envelope-image{
+    transform: scale(1.15) translateY(-14px);
+    opacity: 0;
+}
+
+.envelope-wrap.open{
+    pointer-events: none;
+}
+
+/* shown only if envelope.png fails to load */
+.envelope-placeholder{
+    display: none;
+    position: absolute;
+    inset: 0;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: system-ui, sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--cream);
+    background: rgba(255,255,255,0.06);
+    border: 1px dashed rgba(246,234,217,0.4);
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.envelope-placeholder code{
+    background: rgba(0,0,0,0.25);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.click-hint{
+    margin-top: 18px;
+    color: var(--cream);
+    font-size: 14px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    z-index: 20;
+    transition: opacity 0.4s ease;
+}
+
+.click-hint.hidden{
+    opacity: 0;
+}
+
+/* little pop when the hint text changes to a new encouragement message */
+.pulse-hint{
+    animation: hint-pop 0.4s ease;
+}
+
+@keyframes hint-pop{
+    0%   { transform: scale(1); opacity: 0.7; }
+    35%  { transform: scale(1.18); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.7; }
+}
+
+/* ============ CONFETTI ============ */
+
+.confetti-piece{
+    position: fixed;
+    top: 40%;
+    width: 8px;
+    height: 14px;
+    z-index: 50;
+    pointer-events: none;
+    animation-name: confetti-fall;
+    animation-timing-function: cubic-bezier(.25,.46,.45,.94);
+    animation-fill-mode: forwards;
+}
+
+@keyframes confetti-fall{
+    0%   { transform: translate(0,0) rotate(0deg); opacity: 1; }
+    100% { transform: translate(var(--drift), 85vh) rotate(var(--spin)); opacity: 0; }
+}
+
+/* ============ CARD REVEAL ============ */
+
+.card-overlay{
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10,4,8,0.88);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    z-index: 100;
+}
+
+.card-overlay.visible{
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.card-image{
+    max-width: 85vw;
+    max-height: 85vh;
+    border-radius: 10px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+    transform: scale(0.7);
+    opacity: 0;
+    transition: transform 0.6s cubic-bezier(.2,.9,.3,1.3), opacity 0.6s ease;
+}
+
+.card-overlay.visible .card-image{
+    transform: scale(1);
+    opacity: 1;
+}
+
+.card-placeholder{
+    display: none;
+    max-width: 400px;
+    padding: 40px 30px;
+    background: var(--cream);
+    color: var(--plum-deep);
+    border-radius: 10px;
+    text-align: center;
+    font-size: 15px;
+    line-height: 1.6;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+    transform: scale(0.7);
+    opacity: 0;
+    transition: transform 0.6s cubic-bezier(.2,.9,.3,1.3), opacity 0.6s ease;
+}
+
+.card-placeholder code{
+    background: rgba(0,0,0,0.08);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.card-overlay.visible .card-placeholder{
+    transform: scale(1);
+    opacity: 1;
+}
+
+.close-btn{
+    position: absolute;
+    top: 24px;
+    right: 30px;
+    background: none;
+    border: none;
+    color: var(--cream);
+    font-size: 26px;
+    cursor: pointer;
+    z-index: 101;
+    opacity: 0.8;
+}
+
+.close-btn:hover{
+    opacity: 1;
+}
+
+/* ============ EXPIRY / COUNTDOWN ============ */
+
+.countdown{
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--cream);
+    font-family: system-ui, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    opacity: 0.45;
+    z-index: 20;
+    pointer-events: none;
+}
+
+.expired-message{
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    background: radial-gradient(ellipse at 50% 65%, var(--plum-mid) 0%, var(--plum-deep) 60%, #180810 100%);
+    color: var(--cream);
+    font-family: system-ui, sans-serif;
+}
+
+.expired-message h1{
+    font-family: "Pacifico", cursive;
+    color: var(--rose-glow);
+    font-size: 32px;
+    margin: 0 0 10px;
+}
+
+.expired-message p{
+    opacity: 0.7;
+    font-size: 14px;
+    margin: 0;
+}

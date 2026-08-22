@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="./Birthday.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./Birthday.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday</title>
+</head>
+<body>
+    <div id="content">
+        <div class="stage">
+            <div class="ambient"></div>
+            <div class="caption">Happy Birthday</div>
+
+            <!-- ENVELOPE -->
+            <div class="envelope-scene">
+                <div class="envelope-wrap" id="envelope">
+                    <img src="./assets/Birthday-card.png" alt="Envelope" class="envelope-image" id="envelopeImage">
+                    <div class="envelope-placeholder" id="envelopePlaceholder">
+                        Add your <code>envelope.png</code><br>next to this HTML file
+                    </div>
+                </div>
+                <div class="click-hint" id="hint"><span id="hintText">click me 💌</span></div>
+            </div>
+
+            <!-- CARD REVEAL -->
+            <div class="card-overlay" id="cardOverlay">
+                <button class="close-btn" id="closeBtn">✕</button>
+                <img src="./assets/letter.jpeg" alt="Birthday Card" class="card-image" id="cardImage">
+                <div class="card-placeholder" id="cardPlaceholder">
+                     <code></code><br>
+                </div>
+            </div>
+
+            <div class="countdown" id="countdown"></div>
+        </div>
+    </div>
+</body>
+</html>
