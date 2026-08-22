@@ -188,7 +188,7 @@
     // browser). After that it auto-refreshes into a "no longer available"
     // state.
     (function setupExpiry(){
-        const REFRESH_MS = 10 *60* 1000; // 1 minute 30 seconds
+        const REFRESH_MS = 60* 1000; // 1 minute 30 seconds
         const STORAGE_KEY = 'birthdayPageViewed';
 
         const contentEl = document.getElementById('content');
